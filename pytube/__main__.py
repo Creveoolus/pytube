@@ -31,7 +31,10 @@ class YouTube:
         on_complete_callback: Optional[Callable[[Any, Optional[str]], None]] = None,
         proxies: Dict[str, str] = None,
         use_oauth: bool = False,
-        allow_oauth_cache: bool = True
+        allow_oauth_cache: bool = True,
+        access_token=None,
+        refresh_token=None,
+        expires=None
     ):
         """Construct a :class:`YouTube <YouTube>`.
 
@@ -87,6 +90,10 @@ class YouTube:
 
         self.use_oauth = use_oauth
         self.allow_oauth_cache = allow_oauth_cache
+        
+        self.access_token = access_token
+        self.refresh_token = refresh_token
+        self.expires = expires
 
     def __repr__(self):
         return f'<pytube.__main__.YouTube object: videoId={self.video_id}>'
@@ -241,7 +248,7 @@ class YouTube:
         if self._vid_info:
             return self._vid_info
 
-        innertube = InnerTube(use_oauth=self.use_oauth, allow_cache=self.allow_oauth_cache)
+        innertube = InnerTube(use_oauth=self.use_oauth, allow_cache=self.allow_oauth_cache, access_token=self.access_token, refresh_token=self.refresh_token, expires=self.expires)
 
         innertube_response = innertube.player(self.video_id)
         self._vid_info = innertube_response
@@ -252,7 +259,10 @@ class YouTube:
         innertube = InnerTube(
             client='ANDROID_EMBED',
             use_oauth=self.use_oauth,
-            allow_cache=self.allow_oauth_cache
+            allow_cache=self.allow_oauth_cache,
+            access_token=self.access_token,
+            refresh_token=self.refresh_token,
+            expires=self.expires
         )
         innertube_response = innertube.player(self.video_id)
 
